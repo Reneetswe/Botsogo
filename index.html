@@ -1,0 +1,653 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="css/styles.css"/>
+
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="main-nav">
+  <div class="nav-logo">
+    <img src="./Justlogo.png" alt="Botsogo" class="nav-logo-img"/>
+    <div class="nav-brand">
+      <div class="nav-brand-name">Botsogo</div>
+      <div class="nav-brand-sub">Because your time matters too</div>
+    </div>
+  </div>
+  <div class="nav-mid" id="nav-public">
+    <button class="nav-link" onclick="scrollToSection('features')">How It Works</button>
+    <button class="nav-link" onclick="scrollToSection('clinics-info')">Clinics</button>
+    <button class="nav-link" onclick="scrollToSection('about')">About</button>
+  </div>
+  <div class="nav-right" id="nav-auth-btns">
+    <button class="btn-ghost" onclick="showScreen('login')">Login</button>
+    <button class="btn-teal" onclick="showScreen('register')">Register</button>
+  </div>
+  <div class="nav-right" id="nav-user-btns" style="display:none">
+    <span style="font-size:13px;color:var(--muted);margin-right:6px;" id="nav-greeting"></span>
+    <button class="btn-ghost" onclick="doLogoutPublic()">Sign out</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     SCREEN: LANDING
+══════════════════════════════════════════ -->
+<div class="screen active" id="screen-landing">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <h1 class="hero-h1">No more waiting<br>from 6 in the morning.</h1>
+      <p class="hero-p">Check in from home, see which clinic is least busy, and arrive when you are actually needed not before dawn.</p>
+      <div class="hero-actions">
+        <button class="btn-hero" onclick="showScreen('register')">Register now</button>
+        <button class="btn-hero-out" onclick="showScreen('login')">I already have an account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Strip -->
+  <div class="strip">
+    <div class="strip-item"><i class="ti ti-home-check"></i>Check in from home</div>
+    <div class="strip-item"><i class="ti ti-chart-bar"></i>Live clinic load</div>
+    <div class="strip-item"><i class="ti ti-stethoscope"></i>Smart digital triage</div>
+    <div class="strip-item"><i class="ti ti-clock-check"></i>Staff accountability</div>
+    <div class="strip-item"><i class="ti ti-device-mobile-message"></i>SMS alerts</div>
+  </div>
+
+  <!-- Features -->
+  <div class="section" id="features">
+    <div style="text-align:center;margin-bottom:2rem;">
+      <div class="section-title">How Botsogo works</div>
+      <div class="section-sub">Three interconnected features that cover your full journey from home to discharge.</div>
+    </div>
+    <div class="grid-3">
+      <div class="feat-card">
+        <div class="feat-img"><i class="ti ti-home-check"></i></div>
+        <div class="feat-body">
+          <div class="feat-label">Feature 1</div>
+          <div class="feat-title">Pre-Arrival Check-In</div>
+          <p class="feat-p">Check into the queue before you leave home via the app or USSD *123# on any phone. Get a queue number and an estimated arrival slot so you are not sitting at the clinic from 6 AM.</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-img"><i class="ti ti-chart-bar"></i></div>
+        <div class="feat-body">
+          <div class="feat-label">Feature 2</div>
+          <div class="feat-title">Clinic Load Visibility</div>
+          <p class="feat-p">Before checking in, see a live busyness map of all nearby clinics. If your closest clinic has 89 people and one 3 km away has 14, you choose no one forces you. Information spreads the load naturally.</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-img"><i class="ti ti-stethoscope"></i></div>
+        <div class="feat-body">
+          <div class="feat-label">Feature 3</div>
+          <div class="feat-title">Digital Triage</div>
+          <p class="feat-p">When you arrive, a nurse enters your symptoms into the system. Critical cases go straight to the doctor. Mild cases are resolved by a nurse no doctor needed. Elderly patients are auto-prioritised.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info band -->
+  <div class="info-band" id="about">
+    <div class="info-text">
+      <h2>Built for Botswana's public clinics</h2>
+      <p>Long queues are not just inconvenient they are a barrier to care. Patients arrive before dawn, wait all day, and sometimes leave without being seen. Botsogo addresses this by giving patients information they have never had before.</p>
+      <p>The system also holds clinics accountable. Staff clock in at every shift segment. If a nurse is not at their post after lunch, patients see that before they leave home and can choose a different clinic.</p>
+      <p style="margin-top:1rem;font-weight:600;font-size:15px;">Ministry of Health · Republic of Botswana</p>
+    </div>
+    <div class="info-img"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row" id="clinics-info">
+    <div class="stat-item"><i class="ti ti-building-hospital"></i><div class="stat-num">24</div><div class="stat-lbl">Clinics connected</div></div>
+    <div class="stat-item"><i class="ti ti-users"></i><div class="stat-num">3,400+</div><div class="stat-lbl">Patients served daily</div></div>
+    <div class="stat-item"><i class="ti ti-clock-hour-4"></i><div class="stat-num">~40%</div><div class="stat-lbl">Reduction in wait time</div></div>
+    <div class="stat-item"><i class="ti ti-device-mobile"></i><div class="stat-num">*123#</div><div class="stat-lbl">USSD — any phone</div></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-l">
+      <strong>Botsogo</strong> &nbsp;·&nbsp; Because your time matters too &nbsp;·&nbsp; Ministry of Health, Botswana &nbsp;·&nbsp; &copy; 2026
+      &nbsp;·&nbsp; <i class="ti ti-phone" style="font-size:11px;"></i> +267 363 5000 &nbsp;·&nbsp; <span class="ussd-tag">USSD *123#</span>
+    </div>
+    <button class="staff-lnk" onclick="showScreen('staff-login')"><i class="ti ti-lock" style="font-size:13px;"></i> Staff portal</button>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN: REGISTER
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-register">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <button class="auth-back" onclick="showScreen('landing')"><i class="ti ti-arrow-left"></i> Back to home</button>
+      <div class="auth-head">
+        <div class="auth-logo"><img src="./Justlogo.png" alt="Botsogo"/></div>
+        <div class="auth-h">Create your account</div>
+        <div class="auth-s">Register to join the Botsogo queue from anywhere and track your queue</div>
+      </div>
+      <div class="auth-err" id="reg-err"></div>
+      <div class="field-row">
+        <div class="field"><label>First name</label><input type="text" id="reg-fname" placeholder="Kabo"/></div>
+        <div class="field"><label>Last name</label><input type="text" id="reg-lname" placeholder="Mmolawa"/></div>
+      </div>
+      <div class="field"><label>Omang / ID number</label><input type="text" id="reg-id" placeholder="123456789" maxlength="12"/></div>
+      <div class="field"><label>Mobile number</label><input type="tel" id="reg-phone" placeholder="+267 71 234 567"/></div>
+      <div class="field">
+        <label>Nearest clinic</label>
+        <select id="reg-clinic">
+          <option value="">Select a clinic</option>
+          <option>Gaborone West Clinic</option>
+          <option>Bontleng Clinic</option>
+          <option>Old Naledi Clinic</option>
+          <option>Broadhurst Clinic</option>
+          <option>Mochudi Primary Hospital</option>
+        </select>
+      </div>
+      <div class="field"><label>Password</label><input type="password" id="reg-pw" placeholder="Create a password"/></div>
+      <div class="field"><label>Confirm password</label><input type="password" id="reg-pw2" placeholder="Repeat your password"/></div>
+      <button class="auth-btn" onclick="doRegister()">Create account</button>
+      <div class="auth-switch">Already have an account? <a onclick="showScreen('login')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN: LOGIN
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-login">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <button class="auth-back" onclick="showScreen('landing')"><i class="ti ti-arrow-left"></i> Back to home</button>
+      <div class="auth-head">
+        <div class="auth-logo"><img src="./Justlogo.png" alt="Botsogo"/></div>
+        <div class="auth-h">Welcome back</div>
+        <div class="auth-s">Sign in with your Omang number and password</div>
+      </div>
+      <div class="auth-err" id="login-err-pub"></div>
+      <div class="field"><label>Omang / ID number</label><input type="text" id="login-id" placeholder="123456789"/></div>
+      <div class="field"><label>Password</label><input type="password" id="login-pw" placeholder="Your password"/></div>
+      <button class="auth-btn" onclick="doLoginPublic()">Sign in</button>
+      <div class="divider">or</div>
+      <div style="text-align:center;font-size:13px;color:var(--muted);">Don't have an account? <a style="color:var(--teal);font-weight:500;cursor:pointer;" onclick="showScreen('register')">Register here</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN: PATIENT DASHBOARD
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-dash">
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <h2 id="dash-greeting">Good morning, Kabo</h2>
+      <p>Gaborone West Clinic &nbsp;·&nbsp; Active check-in</p>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px;">Your slot</div>
+      <div style="font-size:16px;font-weight:600;color:var(--teal);">10:30 – 11:00</div>
+    </div>
+  </div>
+  <div class="dash-tabs">
+    <button class="dtab active" onclick="showDash('home',this)"><i class="ti ti-home"></i> Home</button>
+    <button class="dtab" onclick="showDash('myqueue',this)"><i class="ti ti-ticket"></i> My Queue</button>
+  </div>
+
+  <!-- DASH: HOME -->
+  <div class="dash-body" id="dv-home">
+    <div class="alert al-r" id="dash-home-alert">
+      <i class="ti ti-alert-triangle"></i>
+      <div>
+        <div class="al-t">Gaborone West — consultation nurse not yet on post</div>
+        <div class="al-b">This post is unmanned as of 14:18. Consider Bontleng Clinic (32 people, all staff present).</div>
+      </div>
+    </div>
+    <div class="card-label" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);">Nearby clinics — live status</div>
+    <div class="clinic-row">
+      <div>
+        <div class="cn">Gaborone West Clinic</div>
+        <div class="post-ln" id="gwc-p1"><span class="dot doff"></span><span style="color:var(--red);font-size:11px;">Consultation nurse — not on post</span></div>
+        <div class="post-ln"><span class="dot don"></span><span style="color:var(--green);font-size:11px;">Vitals station — on post</span></div>
+        <div class="post-ln"><span class="dot don"></span><span style="color:var(--green);font-size:11px;">Medication counter — on post</span></div>
+        <div class="cd"><i class="ti ti-map-pin" style="font-size:11px;"></i> 1.2 km · your clinic</div>
+      </div>
+      <div class="load-w"><div class="load-b"><div class="lf lh" style="width:85%"></div></div><span class="ln nh">89</span></div>
+    </div>
+    <div class="clinic-row">
+      <div>
+        <div class="cn">Bontleng Clinic</div>
+        <div class="post-ln"><span class="dot don"></span><span style="color:var(--green);font-size:11px;">All posts staffed</span></div>
+        <div class="cd"><i class="ti ti-map-pin" style="font-size:11px;"></i> 3.4 km</div>
+      </div>
+      <div class="load-w"><div class="load-b"><div class="lf lm" style="width:45%"></div></div><span class="ln nm">32</span></div>
+    </div>
+    <div class="clinic-row">
+      <div>
+        <div class="cn">Old Naledi Clinic</div>
+        <div class="post-ln"><span class="dot don"></span><span style="color:var(--green);font-size:11px;">All posts staffed</span></div>
+        <div class="cd"><i class="ti ti-map-pin" style="font-size:11px;"></i> 5.1 km</div>
+      </div>
+      <div class="load-w"><div class="load-b"><div class="lf ll" style="width:18%"></div></div><span class="ln nl">14</span></div>
+    </div>
+    <div style="margin-top:1.25rem;" class="card-label" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);">Your position</div>
+    <div class="mini3">
+      <div class="mini-c"><div class="mc-val">47</div><div class="mc-lbl">Queue number</div></div>
+      <div class="mini-c"><div class="mc-val">~40<span style="font-size:13px;">m</span></div><div class="mc-lbl">Est. wait</div></div>
+      <div class="mini-c"><div class="mc-val">23</div><div class="mc-lbl">Ahead of you</div></div>
+    </div>
+    <div class="alert al-g">
+      <i class="ti ti-device-mobile-message"></i>
+      <div><div class="al-t">SMS alerts are active</div><div class="al-b">You will receive a text when 5 patients remain ahead of you.</div></div>
+    </div>
+  </div>
+
+  <!-- DASH: MY QUEUE -->
+  <div class="dash-body" id="dv-myqueue" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:54px;font-weight:700;color:var(--navy);line-height:1;">47</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;">Queue number &nbsp;·&nbsp; Gaborone West Clinic</div>
+        </div>
+        <div style="background:var(--teal-pale);border-radius:var(--r2);padding:.75rem 1rem;text-align:right;">
+          <div style="font-size:20px;font-weight:600;color:var(--navy);">10:42</div>
+          <div style="font-size:12px;color:var(--teal);margin-top:2px;">Estimated call time</div>
+        </div>
+      </div>
+      <div class="prog"><div class="pf" style="width:48%"></div></div>
+      <div style="font-size:12px;color:var(--muted);">23 ahead &nbsp;·&nbsp; 66 total in queue</div>
+    </div>
+    <div class="card-label" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);">Your journey today</div>
+    <div class="card">
+      <div class="tl-item">
+        <div class="tl-col"><div class="tl-d td-done"></div><div class="tl-ln"></div></div>
+        <div><div class="tl-text">Checked in from home</div><div class="tl-s">8:14 AM via USSD *123#</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-col"><div class="tl-d td-done"></div><div class="tl-ln"></div></div>
+        <div><div class="tl-text">Queue number issued</div><div class="tl-s">Token #47 confirmed by SMS</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-col"><div class="tl-d td-now"></div><div class="tl-ln"></div></div>
+        <div><div class="tl-text" style="color:var(--teal);">Waiting — arrive by 10:30</div><div class="tl-s">23 patients ahead right now</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-col"><div class="tl-d td-p"></div><div class="tl-ln"></div></div>
+        <div><div class="tl-text dim">Nurse triage on arrival</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-col"><div class="tl-d td-p"></div></div>
+        <div><div class="tl-text dim">Consultation</div></div>
+      </div>
+    </div>
+    <div class="alert al-g">
+      <i class="ti ti-bell"></i>
+      <div><div class="al-t">SMS updates active</div><div class="al-b">You will get a text when 5 people remain ahead of you, and again when you are called.</div></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-l">
+      <strong>Botsogo</strong> &nbsp;·&nbsp; Because your time matters too &nbsp;·&nbsp; Ministry of Health, Botswana &nbsp;·&nbsp; &copy; 2026
+      &nbsp;·&nbsp; <i class="ti ti-phone" style="font-size:11px;"></i> +267 363 5000 &nbsp;·&nbsp; <span class="ussd-tag">USSD *123#</span>
+    </div>
+    <button class="staff-lnk" onclick="showScreen('staff-login')"><i class="ti ti-lock" style="font-size:13px;"></i> Staff portal</button>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN: STAFF LOGIN
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-staff-login">
+  <div class="staff-login-wrap">
+    <div class="slc">
+      <div class="sl-top">
+        <div class="auth-logo"><img src="./Justlogo.png" alt="Botsogo"/></div>
+        <div class="sl-badge"><i class="ti ti-lock" style="font-size:10px;"></i>&nbsp;Staff access only</div>
+        <div class="sl-h">Botsogo Staff Portal</div>
+        <div class="sl-s">Gaborone West Clinic — sign in with your staff credentials</div>
+      </div>
+      <div class="auth-err" id="sl-err"></div>
+      <div class="field"><label>Staff ID</label><input type="text" id="sl-id" placeholder="e.g. CLQ-0042"/></div>
+      <div class="field"><label>PIN</label><input type="password" id="sl-pin" placeholder="4-digit PIN" maxlength="4"/></div>
+      <button class="auth-btn" onclick="staffLogin()"><i class="ti ti-login" style="margin-right:6px;"></i>Sign in</button>
+      <div style="text-align:center;margin-top:.875rem;font-size:11px;color:var(--muted);">Demo — <strong>CLQ-0042</strong> / <strong>1234</strong> &nbsp;(Nurse)&nbsp; · &nbsp;<strong>CLQ-0010</strong> / <strong>5678</strong> &nbsp;(Doctor)</div>
+      <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;">
+        <button class="sl-back" onclick="showScreen('landing')"><i class="ti ti-arrow-left" style="font-size:12px;"></i>Back to public site</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN: STAFF DASHBOARD
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-staff-dash">
+  <div class="staff-layout">
+
+    <!-- Sidebar -->
+    <aside class="staff-sidebar">
+      <div class="sb-logo">
+        <div class="sb-logo-wrap"><img src="./Justlogo.png" alt="Botsogo"/></div>
+        <div class="sb-brand">
+          <div class="sb-brand-name">Botsogo</div>
+          <div class="sb-brand-sub">Staff Portal</div>
+        </div>
+      </div>
+      <div class="sb-nav" id="sb-nav"><!-- populated by JS --></div>
+      <div class="sb-foot">
+        <div class="sb-role">
+          <div class="sr-lab">Signed in as</div>
+          <div class="sr-nm" id="sd-name">—</div>
+          <div class="sr-pt" id="sd-post">—</div>
+        </div>
+        <button class="sb-so" onclick="staffLogout()"><i class="ti ti-logout"></i>Sign out</button>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="staff-main">
+      <div class="staff-topbar">
+        <div class="stb-l">
+          <h3 id="stb-title">Overview</h3>
+          <p>Gaborone West Clinic &nbsp;·&nbsp; <span id="stb-role-label">Staff</span></p>
+        </div>
+        <div class="stb-r">
+          <div class="live-b">Live</div>
+          <div class="stb-clk" id="sd-clk">--:--</div>
+        </div>
+      </div>
+
+      <div class="staff-content">
+
+        <!-- OVERVIEW (both roles, content switched by JS) -->
+        <div class="sv-v active" id="sv-overview">
+          <!-- Nurse overview -->
+          <div id="ov-nurse">
+            <div class="dg4">
+              <div class="dg-c"><div class="dg-ic" style="background:var(--teal-pale);"><i class="ti ti-users" style="color:var(--teal);"></i></div><div class="dg-v">66</div><div class="dg-l">Total queue</div><div class="dg-d">+8 since 14:00</div></div>
+              <div class="dg-c"><div class="dg-ic" style="background:var(--grn-bg);"><i class="ti ti-circle-check" style="color:var(--green);"></i></div><div class="dg-v">48</div><div class="dg-l">Triaged today</div><div class="dg-d" style="color:var(--green);">72% complete</div></div>
+              <div class="dg-c"><div class="dg-ic" style="background:var(--red-bg);"><i class="ti ti-urgent" style="color:var(--red);"></i></div><div class="dg-v" style="color:var(--red);">3</div><div class="dg-l">Critical</div><div class="dg-d" style="color:var(--red);">Routed to doctor</div></div>
+              <div class="dg-c"><div class="dg-ic" style="background:var(--amb-bg);"><i class="ti ti-clock-hour-4" style="color:var(--amber);"></i></div><div class="dg-v">~40m</div><div class="dg-l">Avg wait</div><div class="dg-d">Target 35 min</div></div>
+            </div>
+            <div class="alert al-a" id="dash-alert" style="margin-bottom:1rem;">
+              <i class="ti ti-alert-triangle"></i>
+              <div><div class="al-t">Consultation nurse has not clocked in 18 min past shift start</div><div class="al-b">Nurse queue paused. Use Clock-In in the sidebar to resolve this.</div></div>
+            </div>
+            <div class="tbl">
+              <div class="tbl-hd"><span class="tbl-ht">Next to Triage</span><span class="tbl-hc">18 awaiting</span></div>
+              <div class="th" style="grid-template-columns:40px 1fr 110px 90px 70px;"><span>#</span><span>Patient</span><span>Symptoms</span><span>Priority</span><span>Wait</span></div>
+              <div class="tr" style="grid-template-columns:40px 1fr 110px 90px 70px;"><div style="font-weight:600;color:var(--muted);">55</div><div class="pc"><div class="in-av">BM</div><div><div class="pn">B. Moagi</div><div class="pid">34y · F · Arrived 13:52</div></div></div><div style="font-size:12px;color:var(--muted);">Cough, fever</div><div><span class="tag tmi">Mild</span></div><div style="font-size:12px;color:var(--muted);">22m</div></div>
+              <div class="tr" style="grid-template-columns:40px 1fr 110px 90px 70px;"><div style="font-weight:600;color:var(--muted);">58</div><div class="pc"><div class="in-av">TK</div><div><div class="pn">T. Kgosidintsi</div><div class="pid">51y · M · Arrived 13:58</div></div></div><div style="font-size:12px;color:var(--muted);">Joint pain</div><div><span class="tag tmi">Mild</span></div><div style="font-size:12px;color:var(--muted);">16m</div></div>
+              <div class="tr" style="grid-template-columns:40px 1fr 110px 90px 70px;"><div style="font-weight:600;color:var(--muted);">61</div><div class="pc"><div class="in-av">RG</div><div><div class="pn">R. Gabaake</div><div class="pid">29y · F · Arrived 14:05</div></div></div><div style="font-size:12px;color:var(--muted);">Headache</div><div><span class="tag tm">Moderate</span></div><div style="font-size:12px;color:var(--muted);">9m</div></div>
+            </div>
+          </div>
+          <!-- Doctor overview -->
+          <div id="ov-doctor" style="display:none;">
+            <div class="dg4">
+              <div class="dg-c"><div class="dg-ic" style="background:var(--teal-pale);"><i class="ti ti-stethoscope" style="color:var(--teal);"></i></div><div class="dg-v">14</div><div class="dg-l">Assigned to me</div><div class="dg-d">6 remaining</div></div>
+              <div class="dg-c"><div class="dg-ic" style="background:var(--grn-bg);"><i class="ti ti-circle-check" style="color:var(--green);"></i></div><div class="dg-v">8</div><div class="dg-l">Done today</div><div class="dg-d" style="color:var(--green);">57% of list</div></div>
+              <div class="dg-c"><div class="dg-ic" style="background:var(--red-bg);"><i class="ti ti-urgent" style="color:var(--red);"></i></div><div class="dg-v" style="color:var(--red);">3</div><div class="dg-l">Critical</div><div class="dg-d" style="color:var(--red);">Priority queue</div></div>
+              <div class="dg-c"><div class="dg-ic" style="background:var(--amb-bg);"><i class="ti ti-user-check" style="color:var(--amber);"></i></div><div class="dg-v">1</div><div class="dg-l">In consultation</div><div class="dg-d">Since 14:06</div></div>
+            </div>
+            <div class="tbl">
+              <div class="tbl-hd"><span class="tbl-ht">My Patient List — Today</span><span class="tbl-hc">6 remaining</span></div>
+              <div class="th" style="grid-template-columns:40px 1fr 120px 90px 90px;"><span>#</span><span>Patient</span><span>Complaint</span><span>Priority</span><span>Status</span></div>
+              <div class="tr" style="grid-template-columns:40px 1fr 120px 90px 90px;"><div style="font-weight:600;color:var(--muted);">A3</div><div class="pc"><div class="in-av">MS</div><div><div class="pn">M. Sithole <span class="tag te" style="font-size:10px;">Elder</span></div><div class="pid">72y · M</div></div></div><div style="font-size:12px;color:var(--muted);">Chest pain</div><div><span class="tag tc">Critical</span></div><div><span class="tag ton" style="font-size:11px;">Next up</span></div></div>
+              <div class="tr" style="grid-template-columns:40px 1fr 120px 90px 90px;"><div style="font-weight:600;color:var(--muted);">47</div><div class="pc"><div class="in-av">KM</div><div><div class="pn">K. Mmolawa <span class="tag te" style="font-size:10px;">Elder</span></div><div class="pid">68y · M</div></div></div><div style="font-size:12px;color:var(--muted);">Chest, SOB</div><div><span class="tag tc">Critical</span></div><div><span class="tag tmi" style="font-size:11px;">In progress</span></div></div>
+              <div class="tr" style="grid-template-columns:40px 1fr 120px 90px 90px;"><div style="font-weight:600;color:var(--muted);">61</div><div class="pc"><div class="in-av">RG</div><div><div class="pn">R. Gabaake</div><div class="pid">29y · F</div></div></div><div style="font-size:12px;color:var(--muted);">Headache, BP</div><div><span class="tag tm">Moderate</span></div><div><span class="tag" style="background:#F0F4F8;color:var(--muted);font-size:11px;">Waiting</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NURSE: PATIENT QUEUE -->
+        <div class="sv-v" id="sv-queue">
+          <div class="tbl">
+            <div class="tbl-hd"><span class="tbl-ht">Full Patient Queue</span><span class="tbl-hc">66 patients total today</span></div>
+            <div class="th" style="grid-template-columns:40px 1fr 110px 90px 70px 100px;"><span>#</span><span>Patient</span><span>Symptoms</span><span>Priority</span><span>Wait</span><span>Status</span></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 110px 90px 70px 100px;"><div style="font-weight:600;color:var(--muted);">47</div><div class="pc"><div class="in-av">KM</div><div><div class="pn">K. Mmolawa <span class="tag te" style="font-size:10px;">Elder</span></div><div class="pid">68y · M</div></div></div><div style="font-size:12px;color:var(--muted);">Chest, SOB</div><div><span class="tag tc">Critical</span></div><div style="font-size:12px;color:var(--muted);">40m</div><div><span class="tag tc" style="font-size:11px;">→ Doctor</span></div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 110px 90px 70px 100px;"><div style="font-weight:600;color:var(--muted);">55</div><div class="pc"><div class="in-av">BM</div><div><div class="pn">B. Moagi</div><div class="pid">34y · F</div></div></div><div style="font-size:12px;color:var(--muted);">Cough, fever</div><div><span class="tag tmi">Mild</span></div><div style="font-size:12px;color:var(--red);">22m</div><div><span class="tag" style="background:#FEF3E0;color:#7A4D00;font-size:11px;">Awaiting nurse</span></div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 110px 90px 70px 100px;"><div style="font-weight:600;color:var(--muted);">58</div><div class="pc"><div class="in-av">TK</div><div><div class="pn">T. Kgosidintsi</div><div class="pid">51y · M</div></div></div><div style="font-size:12px;color:var(--muted);">Joint pain</div><div><span class="tag tmi">Mild</span></div><div style="font-size:12px;color:var(--muted);">16m</div><div><span class="tag" style="background:#FEF3E0;color:#7A4D00;font-size:11px;">Awaiting nurse</span></div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 110px 90px 70px 100px;"><div style="font-weight:600;color:var(--muted);">61</div><div class="pc"><div class="in-av">RG</div><div><div class="pn">R. Gabaake</div><div class="pid">29y · F</div></div></div><div style="font-size:12px;color:var(--muted);">Headache</div><div><span class="tag tm">Moderate</span></div><div style="font-size:12px;color:var(--muted);">9m</div><div><span class="tag tc" style="font-size:11px;">→ Doctor</span></div></div>
+          </div>
+        </div>
+
+        <!-- NURSE: TRIAGE -->
+        <div class="sv-v" id="sv-triage">
+          <div class="tbl" style="margin-bottom:1rem;">
+            <div class="tbl-hd"><span class="tbl-ht">Triage Current Patient</span></div>
+            <div style="padding:1.125rem;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+                <div style="width:38px;height:38px;border-radius:50%;background:var(--teal-pale);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:var(--teal-dk);">KM</div>
+                <div><div style="font-size:14px;font-weight:500;">Kabo Mmolawa &nbsp;<span class="tag te"><i class="ti ti-star" style="font-size:10px;"></i> Elderly</span></div><div style="font-size:12px;color:var(--muted);">Queue #47 · 68 years · Male</div></div>
+              </div>
+              <div class="sect-label">Presenting symptoms</div>
+              <div class="chip-grid">
+                <div class="chip on" onclick="toggleChip(this)">Chest pain</div>
+                <div class="chip" onclick="toggleChip(this)">Headache</div>
+                <div class="chip on" onclick="toggleChip(this)">Shortness of breath</div>
+                <div class="chip" onclick="toggleChip(this)">Fever</div>
+                <div class="chip" onclick="toggleChip(this)">Cough</div>
+                <div class="chip" onclick="toggleChip(this)">Diarrhoea</div>
+                <div class="chip" onclick="toggleChip(this)">Joint pain</div>
+                <div class="chip" onclick="toggleChip(this)">Rash</div>
+              </div>
+              <div style="display:flex;gap:8px;margin-bottom:1rem;">
+                <button style="background:var(--teal);color:#fff;border:none;border-radius:var(--r);padding:9px 16px;font:500 13px 'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;" onclick="runTriage()"><i class="ti ti-cpu"></i>Run triage</button>
+                <button style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:var(--r);padding:9px 16px;font:13px 'Inter',sans-serif;cursor:pointer;" onclick="resetTriage()">Reset</button>
+              </div>
+              <div class="tri-res tr-i" id="tri-result">
+                <div class="tri-ic ici"><i class="ti ti-info-circle"></i></div>
+                <div><div style="font-size:15px;font-weight:500;color:var(--teal-dk);">Select symptoms to run triage</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">Select presenting symptoms above, then tap Run triage.</div></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="dg-c"><i class="ti ti-stethoscope" style="font-size:20px;color:var(--red);"></i><div style="font-size:13px;font-weight:600;color:var(--red);margin-top:8px;">Doctor queue</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">3 critical · 11 moderate</div></div>
+            <div class="dg-c"><i class="ti ti-bandage" style="font-size:20px;color:var(--green);"></i><div style="font-size:13px;font-weight:600;color:var(--green);margin-top:8px;">Nurse queue</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">18 mild cases</div></div>
+          </div>
+        </div>
+
+        <!-- DOCTOR: MY PATIENTS -->
+        <div class="sv-v" id="sv-patients">
+          <div class="tbl">
+            <div class="tbl-hd"><span class="tbl-ht">My Patients Today</span><span class="tbl-hc">14 assigned · 6 remaining</span></div>
+            <div class="th" style="grid-template-columns:40px 1fr 120px 90px 100px;"><span>#</span><span>Patient</span><span>Complaint</span><span>Priority</span><span>Status</span></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 120px 90px 100px;"><div style="font-weight:600;color:var(--muted);">A3</div><div class="pc"><div class="in-av">MS</div><div><div class="pn">M. Sithole <span class="tag te" style="font-size:10px;">Elder</span></div><div class="pid">72y · M</div></div></div><div style="font-size:12px;color:var(--muted);">Chest pain</div><div><span class="tag tc">Critical</span></div><div><span class="tag ton" style="font-size:11px;">Next up</span></div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 120px 90px 100px;"><div style="font-weight:600;color:var(--muted);">47</div><div class="pc"><div class="in-av">KM</div><div><div class="pn">K. Mmolawa <span class="tag te" style="font-size:10px;">Elder</span></div><div class="pid">68y · M</div></div></div><div style="font-size:12px;color:var(--muted);">Chest, SOB</div><div><span class="tag tc">Critical</span></div><div><span class="tag tmi" style="font-size:11px;">In progress</span></div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 120px 90px 100px;"><div style="font-weight:600;color:var(--muted);">61</div><div class="pc"><div class="in-av">RG</div><div><div class="pn">R. Gabaake</div><div class="pid">29y · F</div></div></div><div style="font-size:12px;color:var(--muted);">Headache, BP</div><div><span class="tag tm">Moderate</span></div><div><span class="tag" style="background:#F0F4F8;color:var(--muted);font-size:11px;">Waiting</span></div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 120px 90px 100px;"><div style="font-weight:600;color:var(--muted);">72</div><div class="pc"><div class="in-av">ON</div><div><div class="pn">O. Nkosi</div><div class="pid">45y · M</div></div></div><div style="font-size:12px;color:var(--muted);">Diabetes review</div><div><span class="tag tmi">Mild</span></div><div><span class="tag" style="background:#F0F4F8;color:var(--muted);font-size:11px;">Waiting</span></div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 120px 90px 100px;"><div style="font-weight:600;color:var(--muted);">05</div><div class="pc"><div class="in-av">AL</div><div><div class="pn">A. Letsholo</div><div class="pid">16y · F</div></div></div><div style="font-size:12px;color:var(--muted);">Rash</div><div><span class="tag tmi">Mild</span></div><div><span class="tag" style="background:#F0F4F8;color:var(--muted);font-size:11px;">Waiting</span></div></div>
+          </div>
+        </div>
+
+        <!-- DOCTOR: CONSULTATIONS -->
+        <div class="sv-v" id="sv-consults">
+          <div class="tbl">
+            <div class="tbl-hd"><span class="tbl-ht">Consultation Log — Today</span><span class="tbl-hc">8 completed</span></div>
+            <div class="th" style="grid-template-columns:40px 1fr 80px 150px 80px;"><span>#</span><span>Patient</span><span>Time</span><span>Outcome</span><span>Duration</span></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 80px 150px 80px;"><div style="font-weight:600;color:var(--muted);">12</div><div class="pc"><div class="in-av">SP</div><div><div class="pn">S. Pheto</div><div class="pid">58y · F</div></div></div><div style="font-size:12px;color:var(--muted);">08:14</div><div style="font-size:12px;">Hypertension — Rx issued</div><div style="font-size:12px;color:var(--muted);">14 min</div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 80px 150px 80px;"><div style="font-weight:600;color:var(--muted);">18</div><div class="pc"><div class="in-av">LM</div><div><div class="pn">L. Moeng</div><div class="pid">33y · M</div></div></div><div style="font-size:12px;color:var(--muted);">09:02</div><div style="font-size:12px;">TB screening — referred</div><div style="font-size:12px;color:var(--muted);">20 min</div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 80px 150px 80px;"><div style="font-weight:600;color:var(--muted);">24</div><div class="pc"><div class="in-av">KS</div><div><div class="pn">K. Sebele</div><div class="pid">42y · F</div></div></div><div style="font-size:12px;color:var(--muted);">09:44</div><div style="font-size:12px;">Diabetes — dose adjusted</div><div style="font-size:12px;color:var(--muted);">11 min</div></div>
+            <div class="tr" style="grid-template-columns:40px 1fr 80px 150px 80px;"><div style="font-weight:600;color:var(--muted);">31</div><div class="pc"><div class="in-av">TM</div><div><div class="pn">T. Mogorosi</div><div class="pid">27y · M</div></div></div><div style="font-size:12px;color:var(--muted);">10:18</div><div style="font-size:12px;">Malaria — treatment started</div><div style="font-size:12px;color:var(--muted);">18 min</div></div>
+          </div>
+        </div>
+
+        <!-- SHARED: CLOCK-IN -->
+        <div class="sv-v" id="sv-clockin">
+          <div class="tbl" style="max-width:500px;">
+            <div class="tbl-hd"><span class="tbl-ht">Clock-In Shift Record</span></div>
+            <div style="padding:1.25rem;" id="sd-ci-pre">
+              <div class="alert al-a" id="sd-ci-alert" style="margin-bottom:1rem;">
+                <i class="ti ti-clock"></i>
+                <div><div class="al-t" id="sd-ci-msg">14:00 shift — 18 minutes past shift start</div><div class="al-b">Your post is showing as unmanned to patients. Please clock in now.</div></div>
+              </div>
+              <div style="background:var(--bg);border-radius:var(--r2);padding:1.5rem;text-align:center;margin-bottom:1rem;">
+                <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Current time</div>
+                <div style="font-size:40px;font-weight:600;color:var(--navy);letter-spacing:-1px;" id="sd-live-clk">--:--</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;margin-bottom:1.25rem;">Gaborone West Clinic</div>
+                <button style="background:var(--teal);color:#fff;border:none;border-radius:var(--r2);padding:11px 24px;font:600 14px 'Inter',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:8px;" onclick="sdClockin()"><i class="ti ti-clock-check" style="font-size:18px;"></i>Clock in now</button>
+              </div>
+              <div style="background:var(--bg);border-radius:var(--r2);padding:.875rem 1rem;">
+                <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Your shift record — today</div>
+                <div class="sl-r"><span>Morning shift (07:30)</span><span style="color:var(--green);">Clocked in 07:34</span></div>
+                <div class="sl-r"><span>Afternoon shift (14:00)</span><span style="color:var(--red);" id="sd-aft-pre">Not yet clocked in</span></div>
+              </div>
+            </div>
+            <div style="padding:1.25rem;display:none;" id="sd-ci-done">
+              <div class="ci-ok" style="margin-bottom:1rem;"><div class="ci-chk"><i class="ti ti-check"></i></div><div><div style="font-size:15px;font-weight:500;color:var(--green);">You are clocked in</div><div style="font-size:13px;color:var(--green);margin-top:2px;" id="sd-ci-confirm">Recorded in punctuality log</div></div></div>
+              <div style="background:var(--bg);border-radius:var(--r2);padding:.875rem 1rem;">
+                <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Your shift record — today</div>
+                <div class="sl-r"><span>Morning shift (07:30)</span><span style="color:var(--green);">Clocked in 07:34</span></div>
+                <div class="sl-r"><span>Afternoon shift (14:00)</span><span style="color:var(--green);" id="sd-aft-done">Clocked in</span></div>
+              </div>
+              <div style="margin-top:.75rem;font-size:12px;color:var(--muted);text-align:center;">Your post is now live and visible to patients.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- legacy portal removed -->
+<div style="display:none">
+
+      <!-- TRIAGE -->
+      <div class="pv active" id="pv-triage">
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+            <div style="width:38px;height:38px;border-radius:50%;background:var(--teal-pale);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:var(--teal-dk);flex-shrink:0;">KM</div>
+            <div><div style="font-size:14px;font-weight:500;">Kabo Mmolawa &nbsp;<span class="tag te"><i class="ti ti-star" style="font-size:10px;"></i> Elderly</span></div><div style="font-size:12px;color:var(--muted);">Queue #47 · 68 years · Male</div></div>
+          </div>
+          <div class="card-label">Presenting symptoms</div>
+          <div class="chip-grid">
+            <div class="chip on" onclick="toggleChip(this)">Chest pain</div>
+            <div class="chip" onclick="toggleChip(this)">Headache</div>
+            <div class="chip on" onclick="toggleChip(this)">Shortness of breath</div>
+            <div class="chip" onclick="toggleChip(this)">Fever</div>
+            <div class="chip" onclick="toggleChip(this)">Cough</div>
+            <div class="chip" onclick="toggleChip(this)">Diarrhoea</div>
+            <div class="chip" onclick="toggleChip(this)">Joint pain</div>
+            <div class="chip" onclick="toggleChip(this)">Rash</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:1rem;">
+            <button style="background:var(--teal);color:#fff;border:none;border-radius:var(--r);padding:9px 16px;font:500 13px 'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;" onclick="runTriage()"><i class="ti ti-cpu"></i> Run triage</button>
+            <button style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:var(--r);padding:9px 16px;font:13px 'Inter',sans-serif;cursor:pointer;" onclick="resetTriage()">Reset</button>
+          </div>
+          <div class="tri-res tr-i" id="tri-result">
+            <div class="tri-ic ici"><i class="ti ti-info-circle"></i></div>
+            <div><div style="font-size:15px;font-weight:500;color:var(--teal-dk);">Select symptoms to run triage</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">Tap presenting symptoms above then tap Run triage.</div></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:#fff;border:2px solid var(--red);border-radius:var(--r2);padding:1rem;"><i class="ti ti-stethoscope" style="font-size:20px;color:var(--red);"></i><div style="font-size:13px;font-weight:600;color:var(--red);margin-top:6px;text-transform:uppercase;letter-spacing:.03em;">Doctor queue</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">3 critical · 11 moderate</div></div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:1rem;"><i class="ti ti-bandage" style="font-size:20px;color:var(--green);"></i><div style="font-size:13px;font-weight:600;color:var(--green);margin-top:6px;text-transform:uppercase;letter-spacing:.03em;">Nurse queue</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">18 mild cases</div></div>
+        </div>
+      </div>
+
+      <!-- STAFF DASHBOARD -->
+      <div class="pv" id="pv-staff">
+        <div class="stats-4">
+          <div class="sc"><div class="sv">66</div><div class="sl">Total queue</div></div>
+          <div class="sc"><div class="sv" style="color:var(--red);">3</div><div class="sl">Critical</div></div>
+          <div class="sc"><div class="sv">18</div><div class="sl">Nurse-only</div></div>
+          <div class="sc"><div class="sv" style="color:var(--amber);" id="late-count">1</div><div class="sl">Staff late</div></div>
+        </div>
+        <div class="alert al-a" id="dash-alert">
+          <i class="ti ti-alert-triangle"></i>
+          <div><div class="al-t">Consultation nurse has not clocked in — 18 min past shift start</div><div class="al-b">24 patients in nurse queue affected. Nurse queue paused until staff clocks in.</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);">Live patient queue</div>
+          <div class="flt-row">
+            <button class="flt active" onclick="setFilter(this,'all')">All</button>
+            <button class="flt" onclick="setFilter(this,'doctor')">Doctor</button>
+            <button class="flt" onclick="setFilter(this,'nurse')">Nurse</button>
+          </div>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div class="pt-h"><span class="pt-th">#</span><span class="pt-th">Patient</span><span class="pt-th">Priority</span><span class="pt-th">Assigned</span></div>
+          <div id="q-rows">
+            <div class="pt-r" data-type="doctor"><div style="font-weight:600;color:var(--muted);">A3</div><div style="font-size:13px;">M. Sithole <span class="tag te" style="font-size:10px;">Elder</span></div><div><span class="tag tc">Critical</span></div><div style="font-size:12px;color:var(--muted);">Doctor</div></div>
+            <div class="pt-r" data-type="doctor"><div style="font-weight:600;color:var(--muted);">47</div><div style="font-size:13px;">K. Mmolawa <span class="tag te" style="font-size:10px;">Elder</span></div><div><span class="tag tc">Critical</span></div><div style="font-size:12px;color:var(--muted);">Doctor</div></div>
+            <div class="pt-r" data-type="nurse"><div style="font-weight:600;color:var(--muted);">55</div><div style="font-size:13px;">B. Moagi</div><div><span class="tag tmi">Mild</span></div><div style="font-size:12px;color:var(--red);" id="n55">Waiting</div></div>
+            <div class="pt-r" data-type="doctor"><div style="font-weight:600;color:var(--muted);">61</div><div style="font-size:13px;">R. Gabaake</div><div><span class="tag tm">Moderate</span></div><div style="font-size:12px;color:var(--muted);">Doctor</div></div>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:1.25rem;margin-bottom:.75rem;">Staff post status — management view</div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div class="st-h"><span class="st-th">Post</span><span class="st-th">Staff member</span><span class="st-th">Clocked in</span><span class="st-th">Status</span></div>
+          <div class="st-r"><div>Consulting doctor</div><div style="color:var(--muted);">Dr. Molefe</div><div style="font-size:12px;color:var(--muted);">14:02</div><div><span class="tag ton">On post</span></div></div>
+          <div class="st-r" id="moagi-row"><div>Consultation nurse</div><div style="color:var(--muted);">Sr. Moagi</div><div style="font-size:12px;color:var(--red);" id="moagi-t">—</div><div><span class="tag tlate" id="moagi-tag">18 min late</span></div></div>
+          <div class="st-r"><div>Vitals station</div><div style="color:var(--muted);">Nurse Tsheko</div><div style="font-size:12px;color:var(--muted);">13:58</div><div><span class="tag ton">On post</span></div></div>
+          <div class="st-r"><div>Medication counter</div><div style="color:var(--muted);">Pharm. Nkosi</div><div style="font-size:12px;color:var(--muted);">14:06</div><div><span class="tag ton">On post</span></div></div>
+        </div>
+      </div>
+
+      <!-- CLOCK-IN -->
+      <div class="pv" id="pv-clockin">
+        <div id="ci-login">
+          <div class="login-wrap">
+            <div class="login-c">
+              <div class="lh-ic"><i class="ti ti-heart-rate-monitor"></i></div>
+              <div class="l-h">ClinicIQ Staff</div>
+              <div class="l-s">Sign in to clock in for your shift</div>
+              <div class="login-err" id="ci-login-err"><i class="ti ti-alert-circle" style="font-size:13px;margin-right:4px;"></i>Incorrect staff ID or PIN.</div>
+              <div class="field" style="margin-top:1rem;"><label>Staff ID</label><input type="text" id="ci-id" placeholder="e.g. CLQ-0042"/></div>
+              <div class="field"><label>PIN</label><input type="password" id="ci-pin" placeholder="4-digit PIN" maxlength="4"/></div>
+              <button class="login-submit" onclick="staffLogin()"><i class="ti ti-login" style="margin-right:6px;"></i>Sign in</button>
+              <div class="login-hint">Demo — ID <strong>CLQ-0042</strong> · PIN <strong>1234</strong> (nurse)<br>or ID <strong>CLQ-0010</strong> · PIN <strong>5678</strong> (doctor)</div>
+            </div>
+          </div>
+        </div>
+        <div id="ci-screen" style="display:none;">
+          <div class="ci-hero">
+            <div><div style="font-size:11px;opacity:.6;margin-bottom:3px;">Signed in as</div><div class="ci-name" id="ci-name">—</div><div class="ci-post" id="ci-post-label">—</div></div>
+            <button class="ci-out" onclick="staffLogout()"><i class="ti ti-logout" style="font-size:14px;"></i> Sign out</button>
+          </div>
+          <div id="ci-pre">
+            <div class="alert al-a" id="ci-shift-alert"><i class="ti ti-clock"></i><div><div class="al-t" id="ci-shift-msg">14:00 shift — you are 18 minutes late</div><div class="al-b">Your post is showing as unmanned to patients. Please clock in now.</div></div></div>
+            <div class="ci-tc">
+              <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Current time</div>
+              <div class="ci-clk" id="live-clk">--:--</div>
+              <div class="ci-dt">Gaborone West Clinic</div>
+              <button class="ci-btn" onclick="doClockin()"><i class="ti ti-clock-check" style="font-size:20px;"></i> Clock in now</button>
+            </div>
+            <div class="sl-card">
+              <div class="sl-t">Your shift record — today</div>
+              <div class="sl-r"><span>Morning shift (07:30)</span><span style="color:var(--green);">Clocked in 07:34</span></div>
+              <div class="sl-r"><span>Afternoon shift (14:00)</span><span style="color:var(--red);" id="ci-aft-pre">Not yet clocked in</span></div>
+            </div>
+          </div>
+          <div id="ci-done" style="display:none;">
+            <div class="ci-ok"><div class="ci-chk"><i class="ti ti-check"></i></div><div><div style="font-size:15px;font-weight:500;color:var(--green);">You are clocked in</div><div style="font-size:13px;color:var(--green);margin-top:2px;" id="ci-confirm">Clocked in — recorded in punctuality log</div></div></div>
+            <div class="sl-card">
+              <div class="sl-t">Your shift record — today</div>
+              <div class="sl-r"><span>Morning shift (07:30)</span><span style="color:var(--green);">Clocked in 07:34</span></div>
+              <div class="sl-r"><span>Afternoon shift (14:00)</span><span style="color:var(--green);" id="ci-aft-done">Clocked in</span></div>
+            </div>
+            <div style="margin-top:.75rem;font-size:12px;color:var(--muted);text-align:center;">Your post is now live. Patients can see you are on post.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
