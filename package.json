@@ -1,0 +1,1 @@
+{"scripts":{"dev":"next dev","build":"next build","start":"next start"},"dependencies":{"@supabase/ssr":"latest","@supabase/supabase-js":"latest","next":"^15.3.3","react":"^19.0.0","react-dom":"^19.0.0"},"devDependencies":{"@types/node":"latest","@types/react":"latest","@types/react-dom":"latest","postcss":"latest","tailwindcss":"^3.4.17","typescript":"latest"}}
