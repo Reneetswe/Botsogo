@@ -39,11 +39,13 @@ export default function NavbarClient(_props: NavbarClientProps = {}) {
         <div className="nav-mid" id="nav-public">
           <button className="nav-link" onClick={() => scrollToSection('features')}>How It Works</button>
           <button className="nav-link" onClick={() => scrollToSection('clinics-info')}>Clinics</button>
+          <Link className="nav-link" href="/ussd">USSD *384#</Link>
           <button className="nav-link" onClick={() => scrollToSection('about')}>About</button>
         </div>
         <div className="nav-right" id="nav-auth-btns">
-          <Link className="btn-ghost" href="/login">Login</Link>
-          <Link className="btn-teal" href="/register">Register</Link>
+          {_props.firstName ? <Link className="btn-ghost" href="/medicines">Medicines</Link> : null}
+          <Link className="btn-ghost" href="/patient/login">Login</Link>
+          <Link className="btn-teal" href="/patient/register">Register</Link>
           <button className="public-mobile-menu-btn" type="button" onClick={() => setMobileOpen((current) => !current)} aria-label="Open menu">
             <i className="ti ti-menu-2"></i>
           </button>
@@ -51,9 +53,11 @@ export default function NavbarClient(_props: NavbarClientProps = {}) {
         <div className={`public-mobile-dropdown ${mobileOpen ? 'open' : ''}`}>
           <button className="nav-link" onClick={() => scrollToSection('features')}>How It Works</button>
           <button className="nav-link" onClick={() => scrollToSection('clinics-info')}>Clinics</button>
+          <Link className="nav-link" href="/ussd" onClick={() => setMobileOpen(false)}>USSD *384#</Link>
           <button className="nav-link" onClick={() => scrollToSection('about')}>About</button>
-          <Link className="btn-ghost" href="/login" onClick={() => setMobileOpen(false)}>Login</Link>
-          <Link className="btn-teal" href="/register" onClick={() => setMobileOpen(false)}>Register</Link>
+          {_props.firstName ? <Link className="btn-ghost" href="/medicines" onClick={() => setMobileOpen(false)}>Medicines</Link> : null}
+          <Link className="btn-ghost" href="/patient/login" onClick={() => setMobileOpen(false)}>Login</Link>
+          <Link className="btn-teal" href="/patient/register" onClick={() => setMobileOpen(false)}>Register</Link>
         </div>
       </nav>
     </>

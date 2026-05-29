@@ -186,7 +186,7 @@ export default function StaffDashboardPage() {
           <div className="staff-mobile-topbar"><button className="staff-mobile-menu-btn" type="button" onClick={() => setSidebarOpen(true)} aria-label="Open staff menu"><i className="ti ti-menu-2"></i></button><div className="staff-mobile-logo"><img src="/Justlogo.png" alt="Botsogo" /></div></div>
           <div className="staff-topbar"><div className="stb-l"><h3 id="stb-title">{staffViewTitles[view]}</h3><p>Gaborone West Clinic &nbsp;Â·&nbsp; <span id="stb-role-label">{staff.role === 'nurse' ? 'Nurse View' : 'Doctor View'}</span></p></div><div className="stb-r"><div className="live-b">Live</div><div className="stb-clk" id="sd-clk">{time}</div></div></div>
           <div className="staff-content">
-            {view === 'overview' && (staff.role === 'nurse' ? <NurseOverview staff={staff} clockedIn={clockedIn} onGoToTriage={() => selectView('triage')} /> : <DoctorOverview staff={staff} />)}
+            {view === 'overview' && (staff.role === 'nurse' ? <NurseOverview clockedIn={clockedIn} clinicId={staff.clinic_id} staffId={staff.id} onGoToTriage={() => selectView('triage')} /> : <DoctorOverview staff={staff} />)}
             {view === 'queue' && <QueueView staff={staff} />}
             {view === 'triage' && <TriageView staff={staff} />}
             {view === 'patients' && <PatientsView staff={staff} />}

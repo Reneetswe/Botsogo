@@ -418,7 +418,7 @@ export default function LiveClinicLoad() {
                   <div className="post-ln"><span className={`dot ${clinic.doctorOnDuty ? 'don' : 'doff'}`}></span><span style={{ color: clinic.doctorOnDuty ? 'var(--green)' : 'var(--red)', fontSize: 11 }}>{clinic.doctorOnDuty ? 'Doctor on duty' : 'Nurse only'}</span></div>
                   <div className="cd"><i className="ti ti-clock" style={{ fontSize: 11 }}></i> Estimated wait: {formatWait(clinic.estimatedWaitMinutes)}</div>
                   {clinic.distanceKm !== null && <div className="cd"><i className="ti ti-map-pin" style={{ fontSize: 11 }}></i> {clinic.distanceKm.toFixed(1)} km away</div>}
-                  <div style={{ marginTop: 8 }}>{isLoggedIn ? joinQueueButton : <Link className="btn-teal" href="/login">Sign in to join</Link>}</div>
+                  <div style={{ marginTop: 8 }}>{isLoggedIn ? joinQueueButton : <Link className="btn-teal" href="/patient/login">Sign in to join</Link>}</div>
                 </div>
                 <div className="load-w">
                   <div style={{ fontSize: 11, color: classes.color, fontWeight: 600, marginBottom: 6 }}>{clinic.loadLevel}</div>

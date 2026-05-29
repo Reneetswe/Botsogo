@@ -13,8 +13,9 @@ interface NurseStats {
 }
 
 interface NurseOverviewProps {
-  staff: StaffMember;
   clockedIn: boolean;
+  clinicId: string;
+  staffId: string;
   onGoToTriage: () => void;
 }
 
@@ -39,12 +40,53 @@ function StatCards({ doctor, stats }: { doctor?: boolean; stats?: NurseStats | n
   return <div className="dg4">{items.map(([icon, value, label, detail]) => <div className="dg-c" key={label}><div className="dg-ic" style={{ background: icon === 'ti-urgent' ? 'var(--red-bg)' : icon === 'ti-clock-hour-4' || icon === 'ti-user-check' ? 'var(--amb-bg)' : icon === 'ti-circle-check' ? 'var(--grn-bg)' : 'var(--teal-pale)' }}><i className={`ti ${icon}`} style={{ color: icon === 'ti-urgent' ? 'var(--red)' : icon === 'ti-clock-hour-4' || icon === 'ti-user-check' ? 'var(--amber)' : icon === 'ti-circle-check' ? 'var(--green)' : 'var(--teal)' }}></i></div><div className="dg-v" style={icon === 'ti-urgent' ? { color: 'var(--red)' } : undefined}>{value}</div><div className="dg-l">{label}</div><div className="dg-d" style={detail.includes('complete') || detail.includes('list') ? { color: 'var(--green)' } : detail.includes('doctor') || detail.includes('Priority') ? { color: 'var(--red)' } : undefined}>{detail}</div></div>)}</div>;
 }
 
-export default function NurseOverview({ staff, clockedIn, onGoToTriage }: NurseOverviewProps) {
+export default function NurseOverview({ clockedIn, clinicId, staffId, onGoToTriage }: NurseOverviewProps) {
   const [doctorOnDuty, setDoctorOnDuty] = useState<{ name: string; time: string } | null>(null);
   const [nurseOnDuty, setNurseOnDuty] = useState<{ name: string; time: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<NurseStats | null>(null);
   const [nextToTriage, setNextToTriage] = useState<Array<{ id: string; position: number; patient_name: string; joined_at: string; is_elderly: boolean }>>([]);
+  const [medicines, setMedicines] = useState<Array<{ id: string; name: string }>>([]);
+  const [selectedMedicineId, setSelectedMedicineId] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState<'in_stock' | 'low' | 'out'>('in_stock');
+  const [stockError, setStockError] = useState('');
+  const [stockSuccess, setStockSuccess] = useState('');
+  const [stockUpdating, setStockUpdating] = useState(false);
+
+  const updateStock = async () => {
+    if (!selectedMedicineId || !selectedLevel) {
+      setStockError('Please select a medicine and stock level.');
+      return;
+    }
+    setStockUpdating(true);
+    setStockError('');
+    setStockSuccess('');
+    const supabase = createClient();
+    
+    const { error } = await supabase
+      .from('medicine_stock')
+      .upsert(
+        {
+          clinic_id: clinicId,
+          medicine_id: selectedMedicineId,
+          level: selectedLevel,
+          updated_by: staffId,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'clinic_id,medicine_id' }
+      );
+    
+    if (error) {
+      setStockError('Failed to update: ' + error.message);
+      setStockUpdating(false);
+      return;
+    }
+    
+    setStockSuccess('Stock updated successfully');
+    setSelectedMedicineId('');
+    setSelectedLevel('in_stock');
+    setStockUpdating(false);
+  };
 
   const fetchStats = useCallback(async () => {
     const supabase = createClient();
@@ -54,7 +96,7 @@ export default function NurseOverview({ staff, clockedIn, onGoToTriage }: NurseO
       .from('queues')
       .select('id')
       .eq('date', today)
-      .eq('clinic_id', staff.clinic_id);
+      .eq('clinic_id', clinicId);
 
     const queueIds = ((queueRows ?? []) as Array<{ id: string }>).map((q) => q.id);
 
@@ -95,7 +137,7 @@ export default function NurseOverview({ staff, clockedIn, onGoToTriage }: NurseO
     const avgWait = waiting > 0 ? (waiting * 2.5) : 0;
 
     setStats({ total, waiting, seen, critical, avgWait });
-  }, [staff.clinic_id]);
+  }, [clinicId]);
 
   const fetchNextToTriage = useCallback(async () => {
     const supabase = createClient();
@@ -105,7 +147,7 @@ export default function NurseOverview({ staff, clockedIn, onGoToTriage }: NurseO
       .from('queues')
       .select('id')
       .eq('date', today)
-      .eq('clinic_id', staff.clinic_id);
+      .eq('clinic_id', clinicId);
 
     const queueIds = ((queueRows ?? []) as Array<{ id: string }>).map((q) => q.id);
 
@@ -133,7 +175,17 @@ export default function NurseOverview({ staff, clockedIn, onGoToTriage }: NurseO
     const untriaged = entries.filter((e) => !triagedEntryIds.has(e.id));
 
     setNextToTriage(untriaged);
-  }, [staff.clinic_id]);
+  }, [clinicId]);
+
+  const fetchMedicines = useCallback(async () => {
+    const supabase = createClient();
+    const { data } = await supabase
+      .from('medicines')
+      .select('id, name')
+      .order('name', { ascending: true })
+      .limit(100);
+    setMedicines((data ?? []) as Array<{ id: string; name: string }>);
+  }, []);
 
   useEffect(() => {
     const fetchClockIns = async () => {
@@ -143,7 +195,7 @@ export default function NurseOverview({ staff, clockedIn, onGoToTriage }: NurseO
         .from('clock_ins')
         .select('staff_id,clocked_in_at,staff(name,role)')
         .eq('shift_date', today)
-        .eq('clinic_id', staff.clinic_id);
+        .eq('clinic_id', clinicId);
 
       if (error) {
         setLoading(false);
@@ -167,9 +219,164 @@ export default function NurseOverview({ staff, clockedIn, onGoToTriage }: NurseO
     void fetchClockIns();
     void fetchStats();
     void fetchNextToTriage();
+    void fetchMedicines();
     const interval = window.setInterval(fetchStats, 30000);
     return () => window.clearInterval(interval);
-  }, [fetchStats, fetchNextToTriage]);
+  }, [fetchStats, fetchNextToTriage, fetchMedicines]);
 
-  return <div className="sv-v active" id="sv-overview"><StatCards stats={stats} />{loading ? <div className="alert al-a" id="dash-alert" style={{ marginBottom: '1rem' }}><i className="ti ti-loader"></i><div><div className="al-t">Loading staff status...</div></div></div> : doctorOnDuty ? <div className="alert al-g" id="dash-alert" style={{ marginBottom: '1rem' }}><i className="ti ti-check"></i><div><div className="al-t">Doctor on duty — {doctorOnDuty.name} clocked in at {doctorOnDuty.time}</div><div className="al-b">Consultation nurse clocked in. Patient-facing status updated.</div></div></div> : <div className="alert al-a" id="dash-alert" style={{ marginBottom: '1rem' }}><i className="ti ti-alert-triangle"></i><div><div className="al-t">No doctor on post yet — patients may face delays</div><div className="al-b">Doctor queue paused. Use Clock-In in the sidebar to resolve this.</div></div></div>}{nextToTriage.length === 0 ? <div style={{ color: 'var(--muted)', fontSize: 13 }}>No patients awaiting triage</div> : <div className="tbl"><div className="tbl-hd"><span className="tbl-ht">Next to Triage</span><span className="tbl-hc">{nextToTriage.length} awaiting</span></div><div className="th" style={{ gridTemplateColumns: '40px 1fr 110px 90px 90px' }}><span>#</span><span>Patient</span><span>Joined</span><span>Elderly</span><span>Action</span></div>{nextToTriage.map((entry) => <div className="tr" style={{ gridTemplateColumns: '40px 1fr 110px 90px 90px' }} key={entry.id}><div style={{ fontWeight: 600, color: 'var(--muted)' }}>{entry.position}</div><div className="pc"><div className="in-av">{entry.patient_name.split(' ').map((part) => part[0]).join('')}</div><div><div className="pn">{entry.patient_name}</div></div></div><div style={{ fontSize: 12, color: 'var(--muted)' }}>Arrived {new Date(entry.joined_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div><div>{entry.is_elderly && <span className="tag te">Elderly</span>}</div><div><button style={{ background: 'var(--teal)', color: '#fff', border: 'none', borderRadius: 'var(--r)', padding: '6px 12px', font: "12px 'Inter',sans-serif", cursor: 'pointer' }} onClick={onGoToTriage}>Triage</button></div></div>)}</div>}</div>;
+  return (
+    <div className="sv-v active" id="sv-overview">
+      <StatCards stats={stats} />
+      {loading ? (
+        <div className="alert al-a" id="dash-alert" style={{ marginBottom: '1rem' }}>
+          <i className="ti ti-loader"></i>
+          <div>
+            <div className="al-t">Loading staff status...</div>
+          </div>
+        </div>
+      ) : doctorOnDuty ? (
+        <div className="alert al-g" id="dash-alert" style={{ marginBottom: '1rem' }}>
+          <i className="ti ti-check"></i>
+          <div>
+            <div className="al-t">Doctor on duty — {doctorOnDuty.name} clocked in at {doctorOnDuty.time}</div>
+            <div className="al-b">Consultation nurse clocked in. Patient-facing status updated.</div>
+          </div>
+        </div>
+      ) : (
+        <div className="alert al-a" id="dash-alert" style={{ marginBottom: '1rem' }}>
+          <i className="ti ti-alert-triangle"></i>
+          <div>
+            <div className="al-t">No doctor on post yet — patients may face delays</div>
+            <div className="al-b">Doctor queue paused. Use Clock-In in the sidebar to resolve this.</div>
+          </div>
+        </div>
+      )}
+      {nextToTriage.length === 0 ? (
+        <div style={{ color: 'var(--muted)', fontSize: 13 }}>No patients awaiting triage</div>
+      ) : (
+        <div className="tbl">
+          <div className="tbl-hd">
+            <span className="tbl-ht">Next to Triage</span>
+            <span className="tbl-hc">{nextToTriage.length} awaiting</span>
+          </div>
+          <div className="th" style={{ gridTemplateColumns: '40px 1fr 110px 90px 90px' }}>
+            <span>#</span>
+            <span>Patient</span>
+            <span>Joined</span>
+            <span>Elderly</span>
+            <span>Action</span>
+          </div>
+          {nextToTriage.map((entry) => (
+            <div className="tr" style={{ gridTemplateColumns: '40px 1fr 110px 90px 90px' }} key={entry.id}>
+              <div style={{ fontWeight: 600, color: 'var(--muted)' }}>{entry.position}</div>
+              <div className="pc">
+                <div className="in-av">{entry.patient_name.split(' ').map((part) => part[0]).join('')}</div>
+                <div>
+                  <div className="pn">{entry.patient_name}</div>
+                </div>
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+                Arrived {new Date(entry.joined_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </div>
+              <div>{entry.is_elderly && <span className="tag te">Elderly</span>}</div>
+              <div>
+                <button
+                  style={{
+                    background: 'var(--teal)',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: 'var(--r)',
+                    padding: '6px 12px',
+                    font: '12px "Inter",sans-serif',
+                    cursor: 'pointer'
+                  }}
+                  onClick={onGoToTriage}
+                >
+                  Triage
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div style={{ marginTop: '2rem' }}>
+        <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--navy)', marginBottom: '1rem' }}>
+          Update Medicine Stock
+        </h3>
+        <form onSubmit={(e) => { e.preventDefault(); void updateStock(); }} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+          <div style={{ flex: '1', minWidth: '200px' }}>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--navy)', marginBottom: '4px' }}>
+              Medicine
+            </label>
+            <select
+              value={selectedMedicineId}
+              onChange={(e) => setSelectedMedicineId(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--r)',
+                fontSize: 14,
+                background: 'var(--bg)',
+                color: 'var(--navy)'
+              }}
+            >
+              <option value="">Select medicine...</option>
+              {medicines.map((med) => (
+                <option key={med.id} value={med.id}>{med.name}</option>
+              ))}
+            </select>
+          </div>
+          <div style={{ minWidth: '150px' }}>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--navy)', marginBottom: '4px' }}>
+              Stock Level
+            </label>
+            <select
+              value={selectedLevel}
+              onChange={(e) => setSelectedLevel(e.target.value as 'in_stock' | 'low' | 'out')}
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--r)',
+                fontSize: 14,
+                background: 'var(--bg)',
+                color: 'var(--navy)'
+              }}
+            >
+              <option value="in_stock">In Stock</option>
+              <option value="low">Running Low</option>
+              <option value="out">Out of Stock</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            disabled={stockUpdating || !selectedMedicineId}
+            style={{
+              background: 'var(--teal)',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: 'var(--r)',
+              fontSize: 14,
+              cursor: 'pointer',
+              height: '42px'
+            }}
+          >
+            {stockUpdating ? 'Updating...' : 'Update'}
+          </button>
+        </form>
+        {stockError && (
+          <div style={{ marginTop: '8px', fontSize: 13, color: 'var(--red)' }}>
+            {stockError}
+          </div>
+        )}
+        {stockSuccess && (
+          <div style={{ marginTop: '8px', fontSize: 13, color: 'var(--green)' }}>
+            {stockSuccess}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

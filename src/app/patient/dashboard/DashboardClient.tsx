@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Footer from '@/components/Footer';
 import Alert from '@/components/Alert';
+import MedicineSearch from '@/components/MedicineSearch';
 import { createClient } from '@/lib/supabase/client';
 import type { PatientProfile } from '@/types';
 
@@ -117,7 +118,7 @@ function haversine(lat1: number, lng1: number, lat2: number, lng2: number): numb
 
 export default function DashboardClient({ profile }: DashboardClientProps) {
   const router = useRouter();
-  const [tab, setTab] = useState<'home' | 'myqueue'>('home');
+  const [tab, setTab] = useState<'home' | 'myqueue' | 'medicines'>('home');
   const [liveClinics, setLiveClinics] = useState<LiveClinicState[]>([]);
   const [clinicsLoading, setClinicsLoading] = useState(true);
   const [clinicsError, setClinicsError] = useState('');
@@ -599,9 +600,9 @@ export default function DashboardClient({ profile }: DashboardClientProps) {
   return (
     <>
       <div className="screen active" id="screen-dash">
-        <div className="dash-header"><div className="dash-header-left"><div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}><h2 id="dash-greeting">{greeting}, {profile.fname}</h2><button className="btn-ghost" type="button" onClick={() => router.push('/profile')}>My profile</button><button className="btn-ghost" type="button" onClick={signOut}>Sign out</button></div><p>Gaborone West Clinic &nbsp;·&nbsp; Active check-in</p></div><div style={{ textAlign: 'right' }}><div style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', marginBottom: 4 }}>Your slot</div><div style={{ fontSize: 16, fontWeight: 600, color: 'var(--teal)' }}>10:30 – 11:00</div></div></div>
-        <div className="dash-tabs"><button className={`dtab ${tab === 'home' ? 'active' : ''}`} onClick={() => setTab('home')}><i className="ti ti-home"></i> Home</button><button className={`dtab ${tab === 'myqueue' ? 'active' : ''}`} onClick={() => setTab('myqueue')}><i className="ti ti-ticket"></i> My Queue</button></div>
-        {tab === 'home' ? (
+        <div className="dash-header"><div className="dash-header-left"><div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}><h2 id="dash-greeting">{greeting}, {profile.fname}</h2><button className="btn-ghost" type="button" onClick={() => router.push('/patient/profile')}>My profile</button><button className="btn-ghost" type="button" onClick={signOut}>Sign out</button></div><p>Gaborone West Clinic &nbsp;·&nbsp; Active check-in</p></div><div style={{ textAlign: 'right' }}><div style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', marginBottom: 4 }}>Your slot</div><div style={{ fontSize: 16, fontWeight: 600, color: 'var(--teal)' }}>10:30 – 11:00</div></div></div>
+        <div className="dash-tabs" style={{ position: 'sticky', top: 0, zIndex: 10, background: '#fff' }}><button className={`dtab ${tab === 'home' ? 'active' : ''}`} onClick={() => setTab('home')}><i className="ti ti-home"></i> Home</button><button className={`dtab ${tab === 'myqueue' ? 'active' : ''}`} onClick={() => setTab('myqueue')}><i className="ti ti-ticket"></i> My Queue</button><button className={`dtab ${tab === 'medicines' ? 'active' : ''}`} onClick={() => setTab('medicines')}><i className="ti ti-pill"></i> Medicines</button></div>
+        {tab === 'home' && (
           <div className="dash-body" id="dv-home">
             {!activeQueueClinic ? null : staffStatusLoading ? <div style={{ marginBottom: '1rem', color: 'var(--muted)', fontSize: 13 }}>Loading staff status...</div> : nurseOnDuty && doctorOnDuty ? <Alert tone="g" icon="ti-check" title={`${activeQueueClinic.name} — all staff on post`} body="Normal service. Your clinic is fully staffed today." id="dash-home-alert" /> : !nurseOnDuty && doctorOnDuty ? <Alert tone="r" icon="ti-alert-triangle" title={`${activeQueueClinic.name} — consultation nurse not yet on post`} body="Consider checking another nearby clinic with full staffing." id="dash-home-alert" /> : nurseOnDuty && !doctorOnDuty ? <Alert tone="a" icon="ti-alert-triangle" title={`${activeQueueClinic.name} — no doctor on duty yet`} body="Nurse services available. Doctor not yet on post." id="dash-home-alert" /> : <Alert tone="r" icon="ti-alert-triangle" title={`${activeQueueClinic.name} — no staff on post yet`} body="No staff have clocked in today. Please check back later or visit another clinic." id="dash-home-alert" />}
             <div className="card-label" style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.07em', color: 'var(--muted)' }}>Nearby clinics — live status</div>
@@ -640,7 +641,8 @@ export default function DashboardClient({ profile }: DashboardClientProps) {
             <div className="mini3"><div className="mini-c"><div className="mc-val">{queueState ? queueState.entry.position : '—'}</div><div className="mc-lbl">Queue number</div></div><div className="mini-c"><div className="mc-val">{queueState ? estimatedSlotFromJoinedAt(queueState.entry.joined_at, queueState.currentPosition) : '—'}</div><div className="mc-lbl">Est. wait</div></div><div className="mini-c"><div className="mc-val">{queueState ? Math.max(queueState.currentPosition - 1, 0) : '—'}</div><div className="mc-lbl">Ahead of you</div></div></div>
             <Alert tone="g" icon="ti-device-mobile-message" title="SMS alerts are active" body="You will receive a text when 5 patients remain ahead of you." />
           </div>
-        ) : (
+        )}
+        {tab === 'myqueue' && (
           <div className="dash-body" id="dv-myqueue">
             {queueLoading && <div className="card" style={{ marginBottom: '1rem', color: 'var(--muted)', fontSize: 13 }}>Loading your queue...</div>}
             {!queueLoading && queueError && <div className="auth-err" style={{ display: 'block', marginBottom: '1rem' }}>{queueError}</div>}
@@ -659,6 +661,17 @@ export default function DashboardClient({ profile }: DashboardClientProps) {
               </div>
             )}
             <Alert tone="g" icon="ti-bell" title="SMS updates active" body="You will get a text when 5 people remain ahead of you, and again when you are called." />
+          </div>
+        )}
+        {tab === 'medicines' && (
+          <div className="dash-body" id="dv-medicines">
+            <div className="card">
+              <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--navy)', marginBottom: '1rem' }}>Medicine Stock Search</h3>
+              <p style={{ fontSize: 14, color: 'var(--muted)', marginBottom: '1rem' }}>Check which clinics have your medicine in stock before leaving home.</p>
+            </div>
+            <div style={{ marginTop: '1rem' }}>
+              <MedicineSearch embedded={true} />
+            </div>
           </div>
         )}
         <Footer />

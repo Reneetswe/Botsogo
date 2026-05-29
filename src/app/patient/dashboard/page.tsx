@@ -8,7 +8,7 @@ export default async function DashboardPage() {
   const { data: userData } = await supabase.auth.getUser();
 
   if (!userData.user) {
-    redirect('/login');
+    redirect('/patient/login');
   }
 
   const { data: profile, error } = await supabase
@@ -18,7 +18,7 @@ export default async function DashboardPage() {
     .single<PatientProfile>();
 
   if (error || !profile) {
-    redirect('/login');
+    redirect('/patient/login');
   }
 
   return <DashboardClient profile={profile} />;

@@ -32,7 +32,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push('/dashboard');
+    router.push('/patient/dashboard');
     router.refresh();
   };
 
@@ -48,8 +48,9 @@ export default function LoginPage() {
             <div className="field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} /></div>
             <div className="field"><label>Password</label><input type="password" id="login-pw" placeholder="Your password" value={password} onChange={(event) => setPassword(event.target.value)} /></div>
             <button className="auth-btn" type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Sign in'}</button>
+            <div style={{ textAlign: 'center', marginTop: '.875rem', fontSize: 11, color: 'var(--muted)' }}>Demo — <strong>you@gmail.com</strong> / <strong>ABcd123@@@</strong></div>
             <div className="divider">or</div>
-            <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--muted)' }}>Don&apos;t have an account? <Link style={{ color: 'var(--teal)', fontWeight: 500, cursor: 'pointer' }} href="/register">Register here</Link></div>
+            <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--muted)' }}>Don&apos;t have an account? <Link style={{ color: 'var(--teal)', fontWeight: 500, cursor: 'pointer' }} href="/patient/register">Register here</Link></div>
           </form>
         </div>
       </div>

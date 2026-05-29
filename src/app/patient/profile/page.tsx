@@ -33,7 +33,7 @@ export default function ProfilePage() {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
-        router.push('/login');
+        router.push('/patient/login');
         return;
       }
 
@@ -78,7 +78,7 @@ export default function ProfilePage() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      router.push('/login');
+      router.push('/patient/login');
       return;
     }
 
@@ -143,7 +143,7 @@ export default function ProfilePage() {
     <div className="screen active" id="screen-profile">
       <div className="auth-card" style={{ maxWidth: 500, margin: '2rem auto' }}>
         <div style={{ marginBottom: '1.5rem' }}>
-          <button className="btn-ghost" type="button" onClick={() => router.push('/dashboard')} style={{ marginBottom: '1rem' }}>
+          <button className="btn-ghost" type="button" onClick={() => router.push('/patient/dashboard')} style={{ marginBottom: '1rem' }}>
             ← Back to dashboard
           </button>
           <h2 style={{ fontSize: 24, fontWeight: 600, color: 'var(--navy)', marginBottom: 4 }}>My Profile</h2>
